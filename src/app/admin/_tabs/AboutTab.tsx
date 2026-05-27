@@ -80,7 +80,7 @@ export default function AboutTab() {
 
     if (imageFile) {
       const ext = imageFile.name.split(".").pop();
-      const path = `settings/about-portrait.${ext}`;
+      const path = `settings/about-portrait-${Date.now()}.${ext}`;
       const { error: uploadError } = await supabase.storage
         .from("portfolio")
         .upload(path, imageFile, { upsert: true });

@@ -150,7 +150,8 @@ export default function ProjectsTab() {
       let imageUrl: string | null = form.image_url.trim() || null;
       if (imageFile) {
         const ext = imageFile.name.split(".").pop();
-        const path = `${editingProject.id}.${ext}`;
+        // Timestamp en el path → URL nueva → CDN cache miss garantizado en Vercel/Supabase
+        const path = `projects/${editingProject.id}-${Date.now()}.${ext}`;
         const { error: uploadError } = await supabase.storage
           .from("portfolio")
           .upload(path, imageFile, { upsert: true });
@@ -200,7 +201,7 @@ export default function ProjectsTab() {
       // Si hay archivo, ahora subir con el ID real del proyecto
       if (imageFile) {
         const ext = imageFile.name.split(".").pop();
-        const path = `${created.id}.${ext}`;
+        const path = `projects/${created.id}-${Date.now()}.${ext}`;
         const { error: uploadError } = await supabase.storage
           .from("portfolio")
           .upload(path, imageFile, { upsert: true });
