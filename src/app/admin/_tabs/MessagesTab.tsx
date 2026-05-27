@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getContactMessages, deleteContactMessage, type ContactMessage } from "@/lib/supabase";
+import { Spinner } from "./_shared";
 
 export default function MessagesTab() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
@@ -44,7 +45,7 @@ export default function MessagesTab() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+        <Spinner />
       </div>
     );
   }

@@ -18,7 +18,9 @@
       "Bash(git -C \"C:\\\\Users\\\\Gonza\\\\Desktop\\\\Tomas-portfolio\" diff --name-only)",
       "Bash(git diff *)",
       "PowerShell(npx tsc --noEmit 2>&1)",
-      "PowerShell(git add -A)"
+      "PowerShell(git add -A)",
+      "PowerShell(git push origin main)",
+      "Bash(npx tsc *)"
     ]
   }
 }

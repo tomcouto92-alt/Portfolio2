@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getSetting, setSetting } from "@/lib/supabase";
 import { DEFAULT_SERVICES } from "@/lib/constants";
+import { Spinner, SaveButton } from "./_shared";
 
 export default function ServicesTab() {
   const [services, setServices] = useState<string[]>(DEFAULT_SERVICES);
@@ -73,7 +74,7 @@ export default function ServicesTab() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+        <Spinner />
       </div>
     );
   }
@@ -167,24 +168,12 @@ export default function ServicesTab() {
         </p>
       )}
 
-      <button
+      <SaveButton
         onClick={handleSave}
-        disabled={saving}
-        className={`min-w-[180px] px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-          saved
-            ? "bg-emerald-500 text-white scale-[1.02]"
-            : saving
-            ? "bg-white/20 text-white/60 cursor-not-allowed"
-            : "bg-white text-black hover:bg-white/90 hover:scale-[1.02] active:scale-[0.99] shadow-lg shadow-white/10"
-        }`}
-      >
-        {saving ? (
-          <span className="flex items-center justify-center gap-2">
-            <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            Guardando...
-          </span>
-        ) : saved ? "✓ Guardado" : "Guardar servicios"}
-      </button>
+        saving={saving}
+        saved={saved}
+        label="Guardar servicios"
+      />
     </div>
   );
 }

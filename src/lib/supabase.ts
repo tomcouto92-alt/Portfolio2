@@ -163,9 +163,6 @@ export async function uploadSettingImage(
   return data.publicUrl;
 }
 
-// ── Storage ────────────────────────────────────────────────────────────────
-
-/** Sube una imagen al bucket "projects" y devuelve la URL pública */
 // ── Mensajes de contacto ──────────────────────────────────────────────────
 
 export interface ContactMessage {

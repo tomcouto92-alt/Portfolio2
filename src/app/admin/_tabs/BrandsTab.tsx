@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getSetting, setSetting } from "@/lib/supabase";
+import { Spinner, SaveButton } from "./_shared";
 
 const DEFAULT_BRANDS = [
   "Allbirds",
@@ -65,7 +66,7 @@ export default function BrandsTab() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+        <Spinner />
       </div>
     );
   }
@@ -82,7 +83,7 @@ export default function BrandsTab() {
       {/* Lista */}
       <div className="space-y-2 mb-4">
         {brands.map((brand, i) => (
-          <div key={i} className="flex items-center gap-2">
+          <div key={brand} className="flex items-center gap-2">
             <div className="text-[var(--p-muted)] text-xs w-5 text-right select-none">{i + 1}</div>
             <input
               type="text"
@@ -123,8 +124,8 @@ export default function BrandsTab() {
       <div className="mb-8 border border-white/10 rounded-2xl overflow-hidden bg-white/[0.02] px-6 py-4">
         <div className="text-xs uppercase tracking-[0.2em] text-[var(--p-muted)] mb-3">Preview</div>
         <div className="flex flex-wrap gap-4 text-xs uppercase tracking-[0.25em] text-[var(--p-muted)]">
-          {brands.filter(Boolean).map((b, i) => (
-            <span key={i}>{b}</span>
+          {brands.filter(Boolean).map((b) => (
+            <span key={b}>{b}</span>
           ))}
         </div>
       </div>
@@ -135,24 +136,12 @@ export default function BrandsTab() {
         </p>
       )}
 
-      <button
+      <SaveButton
         onClick={handleSave}
-        disabled={saving}
-        className={`min-w-[180px] px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-          saved
-            ? "bg-emerald-500 text-white scale-[1.02]"
-            : saving
-            ? "bg-white/20 text-white/60 cursor-not-allowed"
-            : "bg-white text-black hover:bg-white/90 hover:scale-[1.02] active:scale-[0.99] shadow-lg shadow-white/10"
-        }`}
-      >
-        {saving ? (
-          <span className="flex items-center justify-center gap-2">
-            <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            Guardando...
-          </span>
-        ) : saved ? "✓ Guardado" : "Guardar marcas"}
-      </button>
+        saving={saving}
+        saved={saved}
+        label="Guardar marcas"
+      />
     </div>
   );
 }
