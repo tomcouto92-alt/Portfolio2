@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    minimumCacheTTL: 60, // 1 min — evita que Vercel cachee imágenes de Supabase por horas
     remotePatterns: [
       {
         protocol: "https",
