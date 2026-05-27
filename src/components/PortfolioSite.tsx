@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { getProjects, getSetting, sendContactMessage, type Project, type AboutData, type StyleSettings, type SiteLinks } from "@/lib/supabase";
+import { DEFAULT_SERVICES } from "@/lib/constants";
 
 // Proyectos estáticos de fallback (se usan si Supabase no está configurado aún)
 const FALLBACK_PROJECTS: Project[] = [
@@ -56,14 +57,7 @@ const FALLBACK_PROJECTS: Project[] = [
   },
 ];
 
-const SERVICES = [
-  "Creative Direction",
-  "Paid Social Design",
-  "UGC Creative Systems",
-  "Motion Design",
-  "Branding",
-  "Pitch Deck Design",
-];
+const SERVICES = DEFAULT_SERVICES;
 
 const DEFAULT_BRANDS = [
   "Allbirds",
@@ -105,6 +99,7 @@ export default function PortfolioSite() {
   const [about, setAbout] = useState<AboutData>(DEFAULT_ABOUT);
   const [siteStyle, setSiteStyle] = useState<StyleSettings>(DEFAULT_STYLE);
   const [brands, setBrands] = useState<string[]>(DEFAULT_BRANDS);
+  const [services, setServices] = useState<string[]>(SERVICES);
   const [siteLinks, setSiteLinks] = useState<SiteLinks>({
     cta_label:      "Get In Touch",
     cta_href:       "mailto:hello@tomascouto.com",
@@ -158,12 +153,13 @@ export default function PortfolioSite() {
 
     async function loadAll() {
       if (supabaseReady) {
-        const [projectData, heroData, aboutData, styleData, brandsData, linksData] = await Promise.all([
+        const [projectData, heroData, aboutData, styleData, brandsData, servicesData, linksData] = await Promise.all([
           getProjects(),
           getSetting("hero_images"),
           getSetting("about"),
           getSetting("style"),
           getSetting("brands"),
+          getSetting("services"),
           getSetting("links"),
         ]);
         if (projectData.length > 0) setProjects(projectData);
@@ -171,6 +167,7 @@ export default function PortfolioSite() {
         if (aboutData) setAbout(aboutData);
         if (styleData) setSiteStyle({ ...DEFAULT_STYLE, ...styleData });
         if (brandsData && brandsData.length > 0) setBrands(brandsData);
+        if (servicesData && servicesData.length > 0) setServices(servicesData);
         if (linksData) setSiteLinks((prev) => ({ ...prev, ...linksData }));
       }
       setLoading(false);
@@ -344,8 +341,8 @@ export default function PortfolioSite() {
             </div>
           </div>
 
-          <div className="fade-up fade-up-delay-2 relative h-[420px] sm:h-[520px] lg:h-[600px] rounded-[2rem] overflow-hidden border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02]">
-            <div className="absolute inset-0 grid grid-cols-2 gap-3 p-3">
+          <div className="fade-up fade-up-delay-2 relative h-[760px] sm:h-[520px] lg:h-[600px] rounded-[2rem] overflow-hidden border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02]">
+            <div className="absolute inset-0 grid grid-cols-1 sm:grid-cols-2 gap-3 p-3">
               {Array.from({ length: 4 }, (_, i) => {
                 const src = heroImages[i];
                 const valid = src && (src.startsWith("http://") || src.startsWith("https://"));
@@ -358,7 +355,7 @@ export default function PortfolioSite() {
                       fill
                       priority
                       className="object-cover group-hover:scale-105 transition-transform duration-700"
-                      sizes="(max-width: 768px) 50vw, 25vw"
+                      sizes="(max-width: 640px) 90vw, (max-width: 768px) 50vw, 25vw"
                     />
                   </div>
                 ) : (
@@ -501,7 +498,7 @@ export default function PortfolioSite() {
             </h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SERVICES.map((service, i) => (
+            {services.map((service, i) => (
               <div
                 key={service}
                 className={`fade-up fade-up-delay-${(i % 3) + 1} border border-white/10 rounded-[2rem] p-10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors`}

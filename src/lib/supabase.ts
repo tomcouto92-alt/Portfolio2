@@ -123,6 +123,7 @@ export async function getSetting(key: "hero_images"): Promise<string[] | null>;
 export async function getSetting(key: "about"): Promise<AboutData | null>;
 export async function getSetting(key: "style"): Promise<StyleSettings | null>;
 export async function getSetting(key: "brands"): Promise<string[] | null>;
+export async function getSetting(key: "services"): Promise<string[] | null>;
 export async function getSetting(key: "links"): Promise<SiteLinks | null>;
 export async function getSetting(key: string): Promise<unknown> {
   const { data, error } = await supabase

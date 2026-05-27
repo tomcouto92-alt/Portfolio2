@@ -17,6 +17,7 @@ import HeroTab from "./_tabs/HeroTab";
 import AboutTab from "./_tabs/AboutTab";
 import StyleTab from "./_tabs/StyleTab";
 import BrandsTab from "./_tabs/BrandsTab";
+import ServicesTab from "./_tabs/ServicesTab";
 import LinksTab from "./_tabs/LinksTab";
 import MessagesTab from "./_tabs/MessagesTab";
 
@@ -47,7 +48,7 @@ const EMPTY_FORM: FormState = {
 export default function AdminPage() {
   const router = useRouter();
 
-  const [tab, setTab] = useState<"projects" | "hero" | "about" | "style" | "brands" | "links" | "messages">("projects");
+  const [tab, setTab] = useState<"projects" | "hero" | "about" | "style" | "brands" | "services" | "links" | "messages">("projects");
   const [authReady, setAuthReady] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -255,7 +256,7 @@ export default function AdminPage() {
         style={{ scrollbarWidth: "none" }}
       >
         <div className="max-w-5xl mx-auto flex gap-0.5 sm:gap-1 min-w-max md:min-w-0">
-          {(["projects", "hero", "about", "style", "brands", "links", "messages"] as const).map((t) => (
+          {(["projects", "hero", "about", "style", "brands", "services", "links", "messages"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -270,6 +271,7 @@ export default function AdminPage() {
                 : t === "about" ? "About Me"
                 : t === "style" ? "Estilo"
                 : t === "brands" ? "Marcas"
+                : t === "services" ? "Servicios"
                 : t === "links" ? "Links"
                 : "Mensajes"}
             </button>
@@ -291,6 +293,9 @@ export default function AdminPage() {
 
         {/* ── Brands Tab ── */}
         {tab === "brands" && <BrandsTab />}
+
+        {/* ── Services Tab ── */}
+        {tab === "services" && <ServicesTab />}
 
         {/* ── Links Tab ── */}
         {tab === "links" && <LinksTab />}

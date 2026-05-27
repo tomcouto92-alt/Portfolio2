@@ -10,7 +10,15 @@
       "Bash(npm run *)",
       "Bash(git add *)",
       "Bash(git commit -m 'fix: apply all agent review findings *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(Get-Process -Name \"node\" -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object Id, CPU, StartTime)",
+      "Bash(Format-Table -AutoSize)",
+      "PowerShell(Get-Process -Name \"node\" -ErrorAction SilentlyContinue)",
+      "Bash(git -C \"C:\\\\Users\\\\Gonza\\\\Desktop\\\\Tomas-portfolio\" diff --name-only)",
+      "Bash(git diff *)",
+      "PowerShell(npx tsc --noEmit 2>&1)",
+      "PowerShell(git add -A)"
     ]
   }
 }
