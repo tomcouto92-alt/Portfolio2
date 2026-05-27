@@ -4,15 +4,29 @@
 
 -- 1. Tabla de proyectos (solo si no existe)
 CREATE TABLE IF NOT EXISTS projects (
-  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  title       TEXT NOT NULL,
-  category    TEXT NOT NULL,
-  description TEXT NOT NULL,
-  metric      TEXT NOT NULL,
-  image_url   TEXT,
-  sort_order  INT NOT NULL DEFAULT 0,
-  created_at  TIMESTAMPTZ DEFAULT NOW()
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title          TEXT NOT NULL,
+  category       TEXT NOT NULL,
+  description    TEXT NOT NULL,
+  metric         TEXT NOT NULL,
+  image_url      TEXT,
+  case_study_url TEXT,
+  sort_order     INT NOT NULL DEFAULT 0,
+  created_at     TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Migration: add case_study_url if missing (for existing databases)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name   = 'projects'
+      AND column_name  = 'case_study_url'
+  ) THEN
+    ALTER TABLE projects ADD COLUMN case_study_url TEXT;
+  END IF;
+END $$;
 
 -- Migración: si la tabla ya existía con columna "order", renombrarla
 DO $$
@@ -94,3 +108,20 @@ SELECT * FROM (VALUES
   ('Pitch Deck Design',   'Presentation',          'Investor-grade storytelling decks for creator economy startups and modern agencies.',                   '$5M Raised',   4)
 ) AS v(title, category, description, metric, sort_order)
 WHERE NOT EXISTS (SELECT 1 FROM projects LIMIT 1);
+
+-- Performance indexes
+CREATE INDEX IF NOT EXISTS idx_projects_sort_order      ON projects (sort_order ASC);
+CREATE INDEX IF NOT EXISTS idx_contact_messages_created ON contact_messages (created_at DESC);
+
+-- Auto-update updated_at on site_settings
+CREATE OR REPLACE FUNCTION update_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER set_updated_at
+  BEFORE UPDATE ON site_settings
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at();

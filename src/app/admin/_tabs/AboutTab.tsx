@@ -33,6 +33,7 @@ export default function AboutTab() {
   const [error, setError] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const blobUrlRef = useRef<string>("");
 
   useEffect(() => {
     getSetting("about").then((data) => {
@@ -45,11 +46,17 @@ export default function AboutTab() {
       }
       setLoading(false);
     });
+    return () => {
+      if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
+    };
   }, []);
 
   function handleFileChange(file: File) {
+    if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
+    const blobUrl = URL.createObjectURL(file);
+    blobUrlRef.current = blobUrl;
     setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
+    setImagePreview(blobUrl);
   }
 
   function updateExp(i: number, field: keyof ExperienceEntry, val: string) {

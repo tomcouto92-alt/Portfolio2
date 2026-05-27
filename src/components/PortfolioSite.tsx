@@ -153,8 +153,8 @@ export default function PortfolioSite() {
 
   useEffect(() => {
     const supabaseReady =
-      process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      process.env.NEXT_PUBLIC_SUPABASE_URL !== "https://xxxxxxxxxxxx.supabase.co";
+      process.env.NEXT_PUBLIC_SUPABASE_URL?.startsWith("https://") &&
+      process.env.NEXT_PUBLIC_SUPABASE_URL?.includes(".supabase.co");
 
     async function loadAll() {
       if (supabaseReady) {
@@ -189,6 +189,8 @@ export default function PortfolioSite() {
       link = document.createElement("link");
       link.id = id;
       link.rel = "stylesheet";
+      link.media = "print";
+      link.onload = () => { (link as HTMLLinkElement).media = "all"; };
       document.head.appendChild(link);
     }
     const fonts = [...new Set([fontHeading, fontBody])];
@@ -229,11 +231,15 @@ export default function PortfolioSite() {
       setContactError("Completá todos los campos.");
       return;
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactForm.email.trim())) {
+      setContactError("Por favor ingresá un email válido.");
+      return;
+    }
     setContactSending(true);
     setContactError("");
     const { error } = await sendContactMessage(contactForm.name, contactForm.email, contactForm.message);
     if (error) {
-      setContactError("No se pudo enviar. Intentá de nuevo.");
+      setContactError((error as { message?: string })?.message || "Error al enviar el mensaje. Por favor intentá de nuevo.");
     } else {
       setContactDone(true);
       setContactForm({ name: "", email: "", message: "" });
@@ -350,6 +356,7 @@ export default function PortfolioSite() {
                       src={src}
                       alt="Portfolio"
                       fill
+                      priority
                       className="object-cover group-hover:scale-105 transition-transform duration-700"
                       sizes="(max-width: 768px) 50vw, 25vw"
                     />

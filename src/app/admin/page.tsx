@@ -64,6 +64,7 @@ export default function AdminPage() {
 
   // Delete
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -72,7 +73,7 @@ export default function AdminPage() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
-        router.replace("/admin/login");
+        router.replace("/");
       } else {
         setAuthReady(true);
         load();
@@ -197,14 +198,19 @@ export default function AdminPage() {
   async function handleDelete(id: string) {
     if (!confirm("¿Eliminar este proyecto? Esta acción no se puede deshacer.")) return;
     setDeletingId(id);
-    await deleteProject(id);
-    await load();
+    setDeleteError("");
+    const success = await deleteProject(id);
+    if (!success) {
+      setDeleteError("No se pudo eliminar el proyecto. Revisá los permisos de Supabase.");
+    } else {
+      await load();
+    }
     setDeletingId(null);
   }
 
   async function handleLogout() {
     await signOut();
-    router.push("/admin/login");
+    router.push("/");
   }
 
   // ── Render guard ─────────────────────────────────────────────────────────
@@ -318,6 +324,13 @@ export default function AdminPage() {
             <div className="mt-2 text-xs opacity-70">
               Asegurate de haber corrido el SQL de setup en Supabase → SQL Editor.
             </div>
+          </div>
+        )}
+
+        {deleteError && (
+          <div className="mb-6 text-red-400 text-sm bg-red-400/5 border border-red-400/20 rounded-2xl px-5 py-4">
+            <div className="font-medium mb-1">⚠ No se pudo eliminar el proyecto</div>
+            <div className="font-mono text-xs opacity-80">{deleteError}</div>
           </div>
         )}
 

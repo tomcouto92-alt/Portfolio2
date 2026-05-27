@@ -7,6 +7,20 @@ CREATE TABLE IF NOT EXISTS contact_messages (
   created_at timestamptz DEFAULT now()
 );
 
+-- Constraints to prevent spam
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.table_constraints
+    WHERE table_name = 'contact_messages' AND constraint_name = 'name_length'
+  ) THEN
+    ALTER TABLE contact_messages
+      ADD CONSTRAINT name_length    CHECK (char_length(name)    BETWEEN 1 AND 200),
+      ADD CONSTRAINT email_length   CHECK (char_length(email)   BETWEEN 5 AND 254),
+      ADD CONSTRAINT message_length CHECK (char_length(message) BETWEEN 1 AND 5000);
+  END IF;
+END $$;
+
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 
 -- Cualquier visitante puede enviar un mensaje

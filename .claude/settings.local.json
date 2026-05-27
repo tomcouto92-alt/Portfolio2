@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(git clone https://github.com/tomcouto92-alt/Portfolio2 .)",
+      "PowerShell(npm run dev 2>&1)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/admin)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/admin/login)",
+      "Bash(Get-Content \"C:\\\\Users\\\\Gonza\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-Gonza-Desktop-Tomas-portfolio\\\\313dc89d-a36d-46f6-8be7-a6f9b0f76bf3\\\\tasks\\\\ac3e3419fa03031e3.output\" -Raw)",
+      "Bash(npm run *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'fix: apply all agent review findings *)",
+      "Bash(git push *)"
+    ]
+  }
+}
