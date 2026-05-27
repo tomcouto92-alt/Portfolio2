@@ -13,9 +13,11 @@ function isValidUrl(s: string) {
 export default function HeroTab() {
   const [images, setImages] = useState<string[]>(Array(SLOTS).fill(""));
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState<boolean[]>(Array(SLOTS).fill(false));
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<string[]>(Array(SLOTS).fill(""));
+  const [globalError, setGlobalError] = useState("");
   const fileRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -28,16 +30,31 @@ export default function HeroTab() {
     });
   }, []);
 
+  function setSlotError(index: number, msg: string) {
+    setErrors((prev) => prev.map((e, i) => (i === index ? msg : e)));
+  }
+
+  function setSlotUploading(index: number, val: boolean) {
+    setUploading((prev) => prev.map((u, i) => (i === index ? val : u)));
+  }
+
   async function handleFileChange(index: number, file: File) {
+    setSlotError(index, "");
+    setSlotUploading(index, true);
+
     const ext = file.name.split(".").pop();
-    const path = `settings/hero-${index}.${ext}`;
+    const path = `settings/hero-${index}-${Date.now()}.${ext}`;
 
     const { error: uploadError } = await supabase.storage
       .from("portfolio")
       .upload(path, file, { upsert: true });
 
     if (uploadError) {
-      setError(`Error slot ${index + 1}: ${uploadError.message}`);
+      setSlotError(index, uploadError.message.includes("Bucket")
+        ? "Bucket 'portfolio' no existe. Crealo en Supabase → Storage."
+        : uploadError.message
+      );
+      setSlotUploading(index, false);
       return;
     }
 
@@ -45,21 +62,30 @@ export default function HeroTab() {
     const updated = [...images];
     updated[index] = data.publicUrl;
     setImages(updated);
+    setSlotUploading(index, false);
   }
 
   function handleUrl(index: number, val: string) {
+    setSlotError(index, "");
     const updated = [...images];
     updated[index] = val;
     setImages(updated);
   }
 
+  function handleRemove(index: number) {
+    const updated = [...images];
+    updated[index] = "";
+    setImages(updated);
+    setSlotError(index, "");
+  }
+
   async function handleSave() {
     setSaving(true);
-    setError("");
+    setGlobalError("");
     const filtered = images.filter((u) => u.trim() !== "");
     const ok = await setSetting("hero_images", filtered);
     if (!ok) {
-      setError("Error al guardar. Revisá los permisos de Supabase.");
+      setGlobalError("Error al guardar. Revisá los permisos de Supabase.");
     } else {
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
@@ -87,17 +113,36 @@ export default function HeroTab() {
       <div className="grid grid-cols-2 gap-3 sm:gap-5 mb-8">
         {images.map((url, i) => (
           <div key={i} className="space-y-2">
-            <div className="text-xs uppercase tracking-[0.2em] text-[#B8B8B8]">
-              Imagen {i + 1}
+            <div className="flex items-center justify-between">
+              <div className="text-xs uppercase tracking-[0.2em] text-[#B8B8B8]">
+                Imagen {i + 1}
+              </div>
+              {url && isValidUrl(url) && (
+                <button
+                  onClick={() => handleRemove(i)}
+                  className="text-xs text-red-400 hover:text-red-300 transition-colors"
+                >
+                  Quitar
+                </button>
+              )}
             </div>
 
             {/* Preview / upload zone */}
             <div
-              onClick={() => fileRefs.current[i]?.click()}
-              className="relative border-2 border-dashed border-white/10 rounded-2xl overflow-hidden cursor-pointer hover:border-white/25 transition-colors"
+              onClick={() => !uploading[i] && fileRefs.current[i]?.click()}
+              className={`relative border-2 border-dashed rounded-2xl overflow-hidden transition-colors ${
+                uploading[i]
+                  ? "border-white/20 cursor-wait"
+                  : "border-white/10 cursor-pointer hover:border-white/30"
+              }`}
               style={{ minHeight: 140 }}
             >
-              {url && isValidUrl(url) ? (
+              {uploading[i] ? (
+                <div className="flex flex-col items-center justify-center h-36 gap-2">
+                  <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                  <span className="text-xs text-[#B8B8B8]">Subiendo...</span>
+                </div>
+              ) : url && isValidUrl(url) ? (
                 <div className="relative h-36">
                   <Image
                     src={url}
@@ -119,6 +164,12 @@ export default function HeroTab() {
               )}
             </div>
 
+            {errors[i] && (
+              <p className="text-red-400 text-xs bg-red-400/5 border border-red-400/10 rounded-lg px-3 py-2">
+                ⚠ {errors[i]}
+              </p>
+            )}
+
             <input
               ref={(el) => { fileRefs.current[i] = el; }}
               type="file"
@@ -127,6 +178,7 @@ export default function HeroTab() {
               onChange={(e) => {
                 const f = e.target.files?.[0];
                 if (f) handleFileChange(i, f);
+                e.target.value = "";
               }}
             />
 
@@ -141,15 +193,15 @@ export default function HeroTab() {
         ))}
       </div>
 
-      {error && (
+      {globalError && (
         <p className="text-red-400 text-sm bg-red-400/5 border border-red-400/10 rounded-xl px-4 py-3 mb-4">
-          {error}
+          ⚠ {globalError}
         </p>
       )}
 
       <button
         onClick={handleSave}
-        disabled={saving}
+        disabled={saving || uploading.some(Boolean)}
         className={`min-w-[180px] px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-200 ${
           saved
             ? "bg-emerald-500 text-white scale-[1.02]"
