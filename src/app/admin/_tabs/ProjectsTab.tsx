@@ -92,7 +92,12 @@ export default function ProjectsTab() {
 
   // ── Modal handlers ─────────────────────────────────────────────────────
 
+  function clearImagePreview() {
+    if (imagePreview.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
+  }
+
   function openAdd() {
+    clearImagePreview();
     setEditingProject(null);
     setForm(EMPTY_FORM);
     setImageFile(null);
@@ -102,6 +107,7 @@ export default function ProjectsTab() {
   }
 
   function openEdit(p: Project) {
+    clearImagePreview();
     setEditingProject(p);
     setForm({
       title: p.title,
@@ -121,9 +127,14 @@ export default function ProjectsTab() {
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    // Revocar blob anterior para evitar memory leak
+    if (imagePreview.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
+    const blobUrl = URL.createObjectURL(file);
     setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
+    setImagePreview(blobUrl);
     setForm((f) => ({ ...f, image_url: "" }));
+    // Reset para poder re-seleccionar el mismo archivo
+    e.target.value = "";
   }
 
   async function handleSave() {
@@ -410,6 +421,7 @@ export default function ProjectsTab() {
                       imagePreview.startsWith("https://")) ? (
                       <div className="relative h-40">
                         <Image
+                          key={imagePreview}
                           src={imagePreview}
                           alt="Preview"
                           fill
