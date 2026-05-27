@@ -66,7 +66,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="canonical" href="https://tomascouto.com" />
       </head>
-      <body>{children}</body>
+      <body className="bg-[#0A0A0A] text-[#F5F3EF]">{children}</body>
     </html>
   );
 }
