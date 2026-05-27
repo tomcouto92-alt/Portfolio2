@@ -244,7 +244,7 @@ export default function PortfolioSite() {
             <div className="uppercase tracking-[0.3em] text-[var(--p-muted)] text-xs mb-6">
               Senior Graphic Designer / Art Director
             </div>
-            <h1 className="max-w-[11ch] text-[2rem] md:text-[3.5rem] leading-[0.95] font-medium tracking-tight mb-8">
+            <h1 className="max-w-[11ch] text-[85px] leading-[0.95] font-medium tracking-tight mb-8">
               Designing high-performing creative for modern brands.
             </h1>
             <p className="text-lg md:text-xl text-[var(--p-muted)] max-w-xl leading-relaxed mb-10">
@@ -436,7 +436,7 @@ export default function PortfolioSite() {
           <div className="uppercase tracking-[0.3em] text-[var(--p-muted)] text-xs mb-6">
             Contact
           </div>
-          <h2 className="text-5xl md:text-8xl tracking-tight leading-[0.95] mb-10">
+          <h2 className="text-5xl md:text-7xl tracking-tight leading-[0.95] mb-10">
             Let&apos;s build work people actually remember.
           </h2>
           <p className="text-[var(--p-muted)] text-lg max-w-2xl mx-auto mb-12 leading-relaxed">
