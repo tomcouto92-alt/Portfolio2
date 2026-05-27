@@ -306,26 +306,26 @@ export default function PortfolioSite() {
       </nav>
 
       {/* HERO */}
-      <section className="relative min-h-screen flex items-center px-6 pt-32 pb-20">
-        <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-16 items-center">
+      <section className="relative min-h-screen flex items-center px-6 sm:px-8 pt-28 sm:pt-32 pb-16 sm:pb-20">
+        <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div>
-            <div className="fade-up uppercase tracking-[0.3em] text-[var(--p-muted)] text-xs mb-6">
+            <div className="fade-up uppercase tracking-[0.3em] text-[var(--p-muted)] text-xs mb-8">
               Senior Graphic Designer / Art Director
             </div>
-<h1 className="fade-up fade-up-delay-1 text-[clamp(32px,5.8vw,72px)] leading-[0.88] tracking-[-0.04em] font-medium mb-8">
+<h1 className="fade-up fade-up-delay-1 text-[clamp(42px,5.8vw,72px)] leading-[0.92] sm:leading-[0.88] tracking-[-0.03em] sm:tracking-[-0.04em] font-medium mb-8 sm:mb-10">
   <span className="whitespace-nowrap">Designing high-</span><br />
   performing<br />
   creative for<br />
   modern brands.
 </h1>
-            <p className="fade-up fade-up-delay-2 text-lg md:text-xl text-[var(--p-muted)] max-w-xl leading-relaxed mb-10">
+            <p className="fade-up fade-up-delay-2 text-base sm:text-lg md:text-xl text-[var(--p-muted)] max-w-xl leading-relaxed mb-10 sm:mb-12">
               Premium social-first design systems blending performance marketing,
               editorial aesthetics, motion, and creator-commerce storytelling.
             </p>
             <div className="fade-up fade-up-delay-3 flex flex-wrap gap-4">
               <a
                 href="#work"
-                className="px-7 py-4 bg-[var(--p-light)] text-black rounded-full text-sm hover:scale-[1.02] transition-transform"
+                className="px-7 py-4 bg-[var(--p-light)] text-black rounded-full text-sm font-medium hover:scale-[1.02] transition-transform"
               >
                 View Work
               </a>
@@ -338,7 +338,7 @@ export default function PortfolioSite() {
             </div>
           </div>
 
-          <div className="fade-up fade-up-delay-2 relative h-[600px] rounded-[2rem] overflow-hidden border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02]">
+          <div className="fade-up fade-up-delay-2 relative h-[420px] sm:h-[520px] lg:h-[600px] rounded-[2rem] overflow-hidden border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02]">
             <div className="absolute inset-0 grid grid-cols-2 gap-3 p-3">
               {Array.from({ length: 4 }, (_, i) => {
                 const src = heroImages[i];
