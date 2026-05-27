@@ -97,7 +97,7 @@ export default function LinksTab() {
           <div className="text-xs uppercase tracking-[0.2em] text-[var(--p-muted)]">
             Botón 2 (Behance / portfolio)
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-xs text-[var(--p-muted)]/70 mb-1 block">Texto</label>
               <input
@@ -127,7 +127,7 @@ export default function LinksTab() {
           <div className="text-xs uppercase tracking-[0.2em] text-[var(--p-muted)]">
             Botón 3 (LinkedIn / red social)
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-xs text-[var(--p-muted)]/70 mb-1 block">Texto</label>
               <input
@@ -183,9 +183,20 @@ export default function LinksTab() {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="px-8 py-3 bg-[var(--p-light)] text-black rounded-full text-sm font-medium hover:scale-[1.02] transition-transform disabled:opacity-50 disabled:scale-100"
+        className={`min-w-[180px] px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+          saved
+            ? "bg-emerald-500 text-white scale-[1.02]"
+            : saving
+            ? "bg-white/20 text-white/60 cursor-not-allowed"
+            : "bg-white text-black hover:bg-white/90 hover:scale-[1.02] active:scale-[0.99] shadow-lg shadow-white/10"
+        }`}
       >
-        {saving ? "Guardando..." : saved ? "✓ Guardado" : "Guardar links"}
+        {saving ? (
+          <span className="flex items-center justify-center gap-2">
+            <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            Guardando...
+          </span>
+        ) : saved ? "✓ Guardado" : "Guardar links"}
       </button>
     </div>
   );

@@ -116,7 +116,7 @@ export default function StyleTab() {
         {/* Heading font */}
         <div className="mb-8">
           <Label text="Fuente de títulos" />
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {HEADING_FONTS.map((f) => (
               <button
                 key={f.name}
@@ -142,7 +142,7 @@ export default function StyleTab() {
         {/* Body font */}
         <div>
           <Label text="Fuente de texto / cuerpo" />
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {BODY_FONTS.map((f) => (
               <button
                 key={f}
@@ -238,9 +238,20 @@ export default function StyleTab() {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="px-8 py-3 bg-[#F5F3EF] text-black rounded-full text-sm font-medium hover:scale-[1.02] transition-transform disabled:opacity-50 disabled:scale-100"
+        className={`min-w-[180px] px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+          saved
+            ? "bg-emerald-500 text-white scale-[1.02]"
+            : saving
+            ? "bg-white/20 text-white/60 cursor-not-allowed"
+            : "bg-white text-black hover:bg-white/90 hover:scale-[1.02] active:scale-[0.99] shadow-lg shadow-white/10"
+        }`}
       >
-        {saving ? "Guardando..." : saved ? "✓ Guardado" : "Guardar estilo"}
+        {saving ? (
+          <span className="flex items-center justify-center gap-2">
+            <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            Guardando...
+          </span>
+        ) : saved ? "✓ Guardado" : "Guardar estilo"}
       </button>
     </div>
   );

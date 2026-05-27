@@ -190,24 +190,26 @@ export default function AboutTab() {
         <Label text="Experiencia / Filas" />
         <div className="space-y-2">
           {experience.map((e, i) => (
-            <div key={i} className="flex gap-2 items-center">
-              <input
-                type="text"
-                placeholder="Empresa / Rol"
-                value={e.company}
-                onChange={(ev) => updateExp(i, "company", ev.target.value)}
-                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-white/30 transition-colors placeholder:text-[#B8B8B8]/40"
-              />
-              <input
-                type="text"
-                placeholder="Descripción"
-                value={e.role}
-                onChange={(ev) => updateExp(i, "role", ev.target.value)}
-                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-white/30 transition-colors placeholder:text-[#B8B8B8]/40"
-              />
+            <div key={i} className="flex gap-2 items-start">
+              <div className="flex-1 flex flex-col sm:flex-row gap-2">
+                <input
+                  type="text"
+                  placeholder="Empresa / Rol"
+                  value={e.company}
+                  onChange={(ev) => updateExp(i, "company", ev.target.value)}
+                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-white/30 transition-colors placeholder:text-[#B8B8B8]/40"
+                />
+                <input
+                  type="text"
+                  placeholder="Descripción"
+                  value={e.role}
+                  onChange={(ev) => updateExp(i, "role", ev.target.value)}
+                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-white/30 transition-colors placeholder:text-[#B8B8B8]/40"
+                />
+              </div>
               <button
                 onClick={() => removeExp(i)}
-                className="w-9 h-9 flex items-center justify-center border border-red-400/20 text-red-400 rounded-full hover:bg-red-400/10 transition-colors text-lg leading-none"
+                className="w-9 h-9 mt-0.5 flex-shrink-0 flex items-center justify-center border border-red-400/20 text-red-400 rounded-full hover:bg-red-400/10 transition-colors text-lg leading-none"
               >
                 ×
               </button>
@@ -231,9 +233,20 @@ export default function AboutTab() {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="px-8 py-3 bg-[#F5F3EF] text-black rounded-full text-sm font-medium hover:scale-[1.02] transition-transform disabled:opacity-50 disabled:scale-100"
+        className={`min-w-[180px] px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+          saved
+            ? "bg-emerald-500 text-white scale-[1.02]"
+            : saving
+            ? "bg-white/20 text-white/60 cursor-not-allowed"
+            : "bg-white text-black hover:bg-white/90 hover:scale-[1.02] active:scale-[0.99] shadow-lg shadow-white/10"
+        }`}
       >
-        {saving ? "Guardando..." : saved ? "✓ Guardado" : "Guardar about"}
+        {saving ? (
+          <span className="flex items-center justify-center gap-2">
+            <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            Guardando...
+          </span>
+        ) : saved ? "✓ Guardado" : "Guardar about"}
       </button>
     </div>
   );

@@ -222,7 +222,7 @@ export default function AdminPage() {
   return (
     <div className="bg-[#0A0A0A] text-[#F5F3EF] min-h-screen">
       {/* Header */}
-      <header className="sticky top-0 z-10 backdrop-blur-md bg-black/40 border-b border-white/5 px-6 py-4 flex items-center justify-between">
+      <header className="sticky top-0 z-10 backdrop-blur-md bg-black/40 border-b border-white/5 px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <a
             href="/"
@@ -244,13 +244,16 @@ export default function AdminPage() {
       </header>
 
       {/* Tabs */}
-      <div className="border-b border-white/5 px-6">
-        <div className="max-w-5xl mx-auto flex gap-1">
+      <div
+        className="border-b border-white/5 px-4 sm:px-6 overflow-x-auto"
+        style={{ scrollbarWidth: "none" }}
+      >
+        <div className="max-w-5xl mx-auto flex gap-0.5 sm:gap-1 min-w-max md:min-w-0">
           {(["projects", "hero", "about", "style", "brands", "links", "messages"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`px-5 py-3 text-sm transition-colors border-b-2 -mb-px ${
+              className={`px-3 sm:px-5 py-3 text-xs sm:text-sm whitespace-nowrap transition-colors border-b-2 -mb-px ${
                 tab === t
                   ? "border-white text-white"
                   : "border-transparent text-[#B8B8B8] hover:text-white"
@@ -269,7 +272,7 @@ export default function AdminPage() {
       </div>
 
       {/* Main */}
-      <main className="max-w-5xl mx-auto px-6 py-12">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
 
         {/* ── Hero Tab ── */}
         {tab === "hero" && <HeroTab />}
@@ -292,16 +295,16 @@ export default function AdminPage() {
         {/* ── Projects Tab ── */}
         {tab === "projects" && <>
         {/* Title row */}
-        <div className="flex items-center justify-between mb-10">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 sm:mb-10">
           <div>
-            <h1 className="text-3xl tracking-tight">Proyectos</h1>
+            <h1 className="text-2xl sm:text-3xl tracking-tight">Proyectos</h1>
             <p className="text-[#B8B8B8] text-sm mt-1">
               {projects.length} proyecto{projects.length !== 1 ? "s" : ""}
             </p>
           </div>
           <button
             onClick={openAdd}
-            className="px-6 py-3 bg-[#F5F3EF] text-black rounded-full text-sm hover:scale-[1.02] transition-transform"
+            className="px-5 sm:px-6 py-2.5 sm:py-3 bg-white text-black rounded-full text-sm font-medium hover:scale-[1.02] transition-transform shadow-lg shadow-white/10"
           >
             + Nuevo proyecto
           </button>
@@ -505,7 +508,7 @@ export default function AdminPage() {
                 </div>
 
                 {/* Resultado + Orden */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <FormField
                     label="Resultado"
                     value={form.metric}
@@ -553,9 +556,18 @@ export default function AdminPage() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex-1 py-3 bg-[#F5F3EF] text-black rounded-full text-sm font-medium hover:scale-[1.02] transition-transform disabled:opacity-50 disabled:scale-100"
+                  className={`flex-1 py-3.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+                    saving
+                      ? "bg-white/20 text-white/60 cursor-not-allowed"
+                      : "bg-white text-black hover:bg-white/90 hover:scale-[1.02] active:scale-[0.99] shadow-lg shadow-white/10"
+                  }`}
                 >
-                  {saving ? "Guardando..." : editingProject ? "Guardar cambios" : "Crear proyecto"}
+                  {saving ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Guardando...
+                    </span>
+                  ) : editingProject ? "Guardar cambios" : "Crear proyecto"}
                 </button>
               </div>
             </div>

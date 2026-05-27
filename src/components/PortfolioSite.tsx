@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { getProjects, getSetting, sendContactMessage, type Project, type AboutData, type StyleSettings, type SiteLinks } from "@/lib/supabase";
 
@@ -13,8 +13,7 @@ const FALLBACK_PROJECTS: Project[] = [
     description:
       "High-converting paid social campaigns blending premium art direction with direct-response performance.",
     metric: "+38% ROAS",
-    image_url:
-      "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=1400&q=80",
+    image_url: null,
     sort_order: 1,
     case_study_url: null,
     created_at: "",
@@ -26,8 +25,7 @@ const FALLBACK_PROJECTS: Project[] = [
     description:
       "Social-first creative systems designed for creator-led brands and TikTok Shop ecosystems.",
     metric: "12M+ Views",
-    image_url:
-      "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=1400&q=80",
+    image_url: null,
     sort_order: 2,
     case_study_url: null,
     created_at: "",
@@ -39,8 +37,7 @@ const FALLBACK_PROJECTS: Project[] = [
     description:
       "Editorial identity systems balancing clarity, luxury, and conversion-focused storytelling.",
     metric: "Global Launch",
-    image_url:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1400&q=80",
+    image_url: null,
     sort_order: 3,
     case_study_url: null,
     created_at: "",
@@ -52,8 +49,7 @@ const FALLBACK_PROJECTS: Project[] = [
     description:
       "Investor-grade storytelling decks for creator economy startups and modern agencies.",
     metric: "$5M Raised",
-    image_url:
-      "https://images.unsplash.com/photo-1590845947698-8924d7409b56?auto=format&fit=crop&w=1400&q=80",
+    image_url: null,
     sort_order: 4,
     case_study_url: null,
     created_at: "",
@@ -80,19 +76,13 @@ const DEFAULT_BRANDS = [
   "Creator Brands",
 ];
 
-const DEFAULT_HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=1000&q=80",
-  "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=1000&q=80",
-  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1000&q=80",
-  "https://images.unsplash.com/photo-1590845947698-8924d7409b56?auto=format&fit=crop&w=1000&q=80",
-];
+const DEFAULT_HERO_IMAGES: string[] = [];
 
 const DEFAULT_ABOUT: AboutData = {
   title: "Creative direction built for the attention economy.",
   description:
     "Senior designer specializing in premium social-first creative, performance marketing systems, motion design, and creator-commerce storytelling. Blending editorial aesthetics with conversion-driven execution.",
-  image_url:
-    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80",
+  image_url: "",
   experience: [
     { company: "Influencer Marketing Agency", role: "Senior Designer" },
     { company: "Creative Direction", role: "Social-First Campaigns" },
@@ -129,6 +119,37 @@ export default function PortfolioSite() {
   const [contactSending, setContactSending] = useState(false);
   const [contactDone, setContactDone] = useState(false);
   const [contactError, setContactError] = useState("");
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Bloquea scroll cuando el menú mobile está abierto
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileMenuOpen]);
+
+  // Intersection Observer para animaciones de scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll(".fade-up").forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [loading]); // re-run after projects load
 
   useEffect(() => {
     const supabaseReady =
@@ -223,16 +244,63 @@ export default function PortfolioSite() {
   return (
     <div className="min-h-screen font-sans overflow-x-hidden portfolio-root" style={{ backgroundColor: "var(--p-bg)", color: "var(--p-text)" }}>
       {/* NAV */}
-      <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-black/20 border-b border-white/5">
+      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        scrolled || mobileMenuOpen
+          ? "bg-[#0A0A0A]/95 backdrop-blur-md border-b border-white/10 shadow-lg shadow-black/20"
+          : "bg-transparent border-b border-transparent"
+      }`}>
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-          <div className="text-sm tracking-[0.25em] uppercase text-[var(--p-muted)]">
-            Tomas Couto
+          <div className="flex items-center gap-3">
+            <img src="/logo.svg" alt="TC" className="w-7 h-7 opacity-90" />
+            <div className={`text-sm tracking-[0.25em] uppercase transition-colors duration-300 ${
+              scrolled || mobileMenuOpen ? "text-white" : "text-[var(--p-muted)]"
+            }`}>
+              Tomas Couto
+            </div>
           </div>
-          <div className="hidden md:flex gap-8 text-sm text-[var(--p-muted)]">
-            <a href="#work" className="hover:text-white transition-colors">Work</a>
-            <a href="#about" className="hover:text-white transition-colors">About</a>
-            <a href="#services" className="hover:text-white transition-colors">Services</a>
-            <a href="#contact" className="hover:text-white transition-colors">Contact</a>
+
+          {/* Desktop links */}
+          <div className="hidden md:flex gap-8 text-sm">
+            {["Work", "About", "Services", "Contact"].map((item) => (
+              <a
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                className={`transition-colors duration-300 hover:text-white ${
+                  scrolled ? "text-[#B8B8B8]" : "text-[var(--p-muted)]"
+                }`}
+              >
+                {item}
+              </a>
+            ))}
+          </div>
+
+          {/* Hamburger button — mobile only */}
+          <button
+            onClick={() => setMobileMenuOpen((v) => !v)}
+            className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5"
+            aria-label="Toggle menu"
+          >
+            <span className={`block h-px w-6 bg-white transition-all duration-300 origin-center ${mobileMenuOpen ? "rotate-45 translate-y-[5px]" : ""}`} />
+            <span className={`block h-px bg-white transition-all duration-300 ${mobileMenuOpen ? "w-0 opacity-0" : "w-6 opacity-100"}`} />
+            <span className={`block h-px w-6 bg-white transition-all duration-300 origin-center ${mobileMenuOpen ? "-rotate-45 -translate-y-[5px]" : ""}`} />
+          </button>
+        </div>
+
+        {/* Mobile menu drawer */}
+        <div className={`md:hidden transition-all duration-300 overflow-hidden ${
+          mobileMenuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
+        }`}>
+          <div className="px-6 pb-8 pt-2 flex flex-col gap-1">
+            {["Work", "About", "Services", "Contact"].map((item) => (
+              <a
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-2xl font-medium text-white/80 hover:text-white transition-colors py-3 border-b border-white/5 last:border-0"
+              >
+                {item}
+              </a>
+            ))}
           </div>
         </div>
       </nav>
@@ -241,23 +309,20 @@ export default function PortfolioSite() {
       <section className="relative min-h-screen flex items-center px-6 pt-32 pb-20">
         <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <div className="uppercase tracking-[0.3em] text-[var(--p-muted)] text-xs mb-6">
+            <div className="fade-up uppercase tracking-[0.3em] text-[var(--p-muted)] text-xs mb-6">
               Senior Graphic Designer / Art Director
             </div>
-<h1 className="max-w-[8ch] text-[85px] leading-[0.88] tracking-[-0.04em] font-medium mb-8">
-  Designing
-  <br />
-  high-performing
-  <br />
-  creative for
-  <br />
+<h1 className="fade-up fade-up-delay-1 text-[clamp(32px,5.8vw,72px)] leading-[0.88] tracking-[-0.04em] font-medium mb-8">
+  <span className="whitespace-nowrap">Designing high-</span><br />
+  performing<br />
+  creative for<br />
   modern brands.
 </h1>
-            <p className="text-lg md:text-xl text-[var(--p-muted)] max-w-xl leading-relaxed mb-10">
+            <p className="fade-up fade-up-delay-2 text-lg md:text-xl text-[var(--p-muted)] max-w-xl leading-relaxed mb-10">
               Premium social-first design systems blending performance marketing,
               editorial aesthetics, motion, and creator-commerce storytelling.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="fade-up fade-up-delay-3 flex flex-wrap gap-4">
               <a
                 href="#work"
                 className="px-7 py-4 bg-[var(--p-light)] text-black rounded-full text-sm hover:scale-[1.02] transition-transform"
@@ -273,23 +338,26 @@ export default function PortfolioSite() {
             </div>
           </div>
 
-          <div className="relative h-[600px] rounded-[2rem] overflow-hidden border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02]">
+          <div className="fade-up fade-up-delay-2 relative h-[600px] rounded-[2rem] overflow-hidden border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02]">
             <div className="absolute inset-0 grid grid-cols-2 gap-3 p-3">
-              {heroImages.map((src: string, i: number) => (
-                <div
-                  key={i}
-                  className="rounded-[1.5rem] overflow-hidden relative group"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 z-10" />
-                  <Image
-                    src={src}
-                    alt="Portfolio"
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-700"
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                  />
-                </div>
-              ))}
+              {Array.from({ length: 4 }, (_, i) => {
+                const src = heroImages[i];
+                const valid = src && (src.startsWith("http://") || src.startsWith("https://"));
+                return valid ? (
+                  <div key={i} className="rounded-[1.5rem] overflow-hidden relative group">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 z-10" />
+                    <Image
+                      src={src}
+                      alt="Portfolio"
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                    />
+                  </div>
+                ) : (
+                  <div key={i} className="rounded-[1.5rem] bg-white/5" />
+                );
+              })}
             </div>
           </div>
         </div>
@@ -308,10 +376,10 @@ export default function PortfolioSite() {
       <section id="work" className="px-6 py-32">
         <div className="max-w-7xl mx-auto">
           <div className="mb-20">
-            <div className="uppercase tracking-[0.3em] text-[var(--p-muted)] text-xs mb-5">
+            <div className="fade-up uppercase tracking-[0.3em] text-[var(--p-muted)] text-xs mb-5">
               Selected Work
             </div>
-            <h2 className="text-5xl md:text-7xl max-w-4xl leading-[1] tracking-tight">
+            <h2 className="fade-up fade-up-delay-1 text-5xl md:text-7xl max-w-4xl leading-[1] tracking-tight">
               Strategic creative systems built for performance and brand equity.
             </h2>
           </div>
@@ -325,7 +393,7 @@ export default function PortfolioSite() {
               {projects.map((project, index) => (
                 <div
                   key={project.id}
-                  className={`grid lg:grid-cols-2 gap-12 items-center ${
+                  className={`fade-up grid lg:grid-cols-2 gap-12 items-center ${
                     index % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""
                   }`}
                 >
@@ -382,16 +450,16 @@ export default function PortfolioSite() {
       <section id="about" className="bg-[var(--p-light)] text-black px-6 py-32">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
           <div>
-            <div className="uppercase tracking-[0.3em] text-gray-500 text-xs mb-5">
+            <div className="fade-up uppercase tracking-[0.3em] text-gray-500 text-xs mb-5">
               About
             </div>
-            <h2 className="text-5xl md:text-7xl leading-[1] tracking-tight mb-8">
+            <h2 className="fade-up fade-up-delay-1 text-5xl md:text-7xl leading-[1] tracking-tight mb-8">
               {about.title}
             </h2>
-            <p className="text-gray-700 text-lg leading-relaxed mb-10 max-w-xl">
+            <p className="fade-up fade-up-delay-2 text-gray-700 text-lg leading-relaxed mb-10 max-w-xl">
               {about.description}
             </p>
-            <div className="space-y-8">
+            <div className="fade-up fade-up-delay-3 space-y-8">
               {about.experience.map((e, i) => (
                 <div key={i} className="border-t border-black/10 pt-5 flex justify-between text-sm">
                   <span>{e.company}</span>
@@ -400,14 +468,16 @@ export default function PortfolioSite() {
               ))}
             </div>
           </div>
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gray-200">
-            <Image
-              src={about.image_url}
-              alt="Portrait"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
+          <div className="fade-up fade-up-delay-2 relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gray-200">
+            {about.image_url && (
+              <Image
+                src={about.image_url}
+                alt="Portrait"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            )}
           </div>
         </div>
       </section>
@@ -416,18 +486,18 @@ export default function PortfolioSite() {
       <section id="services" className="px-6 py-32">
         <div className="max-w-7xl mx-auto">
           <div className="mb-20">
-            <div className="uppercase tracking-[0.3em] text-[var(--p-muted)] text-xs mb-5">
+            <div className="fade-up uppercase tracking-[0.3em] text-[var(--p-muted)] text-xs mb-5">
               Services
             </div>
-            <h2 className="text-5xl md:text-7xl tracking-tight leading-[1] max-w-4xl">
+            <h2 className="fade-up fade-up-delay-1 text-5xl md:text-7xl tracking-tight leading-[1] max-w-4xl">
               Building creative systems for ambitious brands.
             </h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SERVICES.map((service) => (
+            {SERVICES.map((service, i) => (
               <div
                 key={service}
-                className="border border-white/10 rounded-[2rem] p-10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
+                className={`fade-up fade-up-delay-${(i % 3) + 1} border border-white/10 rounded-[2rem] p-10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors`}
               >
                 <div className="text-2xl leading-snug tracking-tight">{service}</div>
               </div>
@@ -439,17 +509,17 @@ export default function PortfolioSite() {
       {/* CONTACT */}
       <section id="contact" className="px-6 py-32 border-t border-white/5">
         <div className="max-w-5xl mx-auto text-center">
-          <div className="uppercase tracking-[0.3em] text-[var(--p-muted)] text-xs mb-6">
+          <div className="fade-up uppercase tracking-[0.3em] text-[var(--p-muted)] text-xs mb-6">
             Contact
           </div>
-          <h2 className="text-5xl md:text-7xl tracking-tight leading-[0.95] mb-10">
+          <h2 className="fade-up fade-up-delay-1 text-5xl md:text-7xl tracking-tight leading-[0.95] mb-10">
             Let&apos;s build work people actually remember.
           </h2>
-          <p className="text-[var(--p-muted)] text-lg max-w-2xl mx-auto mb-12 leading-relaxed">
+          <p className="fade-up fade-up-delay-2 text-[var(--p-muted)] text-lg max-w-2xl mx-auto mb-12 leading-relaxed">
             Available for freelance projects, creative partnerships, social
             campaigns, and full creative systems.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="fade-up fade-up-delay-3 flex flex-wrap justify-center gap-4">
             <button
               onClick={() => { setContactOpen(true); setContactDone(false); setContactError(""); }}
               className="px-8 py-4 rounded-full bg-[var(--p-light)] text-black text-sm hover:scale-[1.02] transition-transform"

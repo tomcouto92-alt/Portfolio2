@@ -51,7 +51,7 @@ export default function MessagesTab() {
 
   return (
     <div className="max-w-2xl">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl tracking-tight">Mensajes recibidos</h2>
           <p className="text-[var(--p-muted)] text-sm mt-1">
@@ -79,18 +79,18 @@ export default function MessagesTab() {
               key={msg.id}
               className="border border-white/10 rounded-2xl p-6 bg-white/[0.02] space-y-3"
             >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="font-medium">{msg.name}</div>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="font-medium truncate">{msg.name}</div>
                   <button
                     onClick={() => copyEmail(msg.id, msg.email)}
-                    className="text-sm text-[var(--p-muted)] hover:text-white transition-colors"
+                    className="text-sm text-[var(--p-muted)] hover:text-white transition-colors truncate max-w-full block"
                   >
                     {copiedId === msg.id ? "✓ Copiado" : msg.email}
                   </button>
                 </div>
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <span className="text-xs text-[var(--p-muted)]">{formatDate(msg.created_at)}</span>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span className="text-xs text-[var(--p-muted)] whitespace-nowrap">{formatDate(msg.created_at)}</span>
                   <button
                     onClick={() => handleDelete(msg.id)}
                     disabled={deletingId === msg.id}
