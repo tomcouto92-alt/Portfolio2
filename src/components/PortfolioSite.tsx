@@ -244,9 +244,15 @@ export default function PortfolioSite() {
             <div className="uppercase tracking-[0.3em] text-[var(--p-muted)] text-xs mb-6">
               Senior Graphic Designer / Art Director
             </div>
-            <h1 className="max-w-[11ch] text-[85px] leading-[0.95] font-medium tracking-tight mb-8">
-              Designing high-performing creative for modern brands.
-            </h1>
+<h1 className="max-w-[8ch] text-[85px] leading-[0.88] tracking-[-0.04em] font-medium mb-8">
+  Designing
+  <br />
+  high-performing
+  <br />
+  creative for
+  <br />
+  modern brands.
+</h1>
             <p className="text-lg md:text-xl text-[var(--p-muted)] max-w-xl leading-relaxed mb-10">
               Premium social-first design systems blending performance marketing,
               editorial aesthetics, motion, and creator-commerce storytelling.
