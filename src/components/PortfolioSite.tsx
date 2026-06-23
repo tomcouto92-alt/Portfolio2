@@ -432,7 +432,7 @@ export default function PortfolioSite() {
                         <div className="text-2xl">{project.metric}</div>
                       </div>
                     </div>
-                    {project.case_study_url && (
+                    {project.case_study_url ? (
                       <a
                         href={project.case_study_url}
                         target="_blank"
@@ -441,7 +441,14 @@ export default function PortfolioSite() {
                       >
                         View Case Study
                       </a>
-                    )}
+                    ) : project.case_study_data && Object.keys(project.case_study_data).length > 0 ? (
+                      <a
+                        href={`/work/${project.id}`}
+                        className="inline-block border border-white/10 rounded-full px-6 py-3 text-sm hover:bg-white/5 transition-colors"
+                      >
+                        View Case Study
+                      </a>
+                    ) : null}
                   </div>
                 </div>
               ))}

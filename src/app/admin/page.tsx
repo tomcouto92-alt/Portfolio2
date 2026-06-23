@@ -11,11 +11,13 @@ import ServicesTab from "./_tabs/ServicesTab";
 import LinksTab from "./_tabs/LinksTab";
 import MessagesTab from "./_tabs/MessagesTab";
 import ProjectsTab from "./_tabs/ProjectsTab";
+import CaseStudyTab from "./_tabs/CaseStudyTab";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
 type AdminTab =
   | "projects"
+  | "case-study"
   | "hero"
   | "about"
   | "style"
@@ -26,6 +28,7 @@ type AdminTab =
 
 const TABS: AdminTab[] = [
   "projects",
+  "case-study",
   "hero",
   "about",
   "style",
@@ -37,6 +40,7 @@ const TABS: AdminTab[] = [
 
 const TAB_LABELS: Record<AdminTab, string> = {
   projects: "Proyectos",
+  "case-study": "Case Study",
   hero: "Hero",
   about: "About Me",
   style: "Estilo",
@@ -132,6 +136,7 @@ export default function AdminPage() {
       {/* Main */}
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {tab === "projects" && <ProjectsTab />}
+        {tab === "case-study" && <CaseStudyTab />}
         {tab === "hero" && <HeroTab />}
         {tab === "about" && <AboutTab />}
         {tab === "style" && <StyleTab />}

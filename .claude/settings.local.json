@@ -20,7 +20,15 @@
       "PowerShell(npx tsc --noEmit 2>&1)",
       "PowerShell(git add -A)",
       "PowerShell(git push origin main)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Skill(run)",
+      "Skill(run:*)",
+      "PowerShell(npm run dev)",
+      "PowerShell(Start-Process \"http://localhost:3000\")",
+      "Bash(mkdir -p \"c:/Users/Gonza/Desktop/Tomas-portfolio/src/app/work/[id]\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\Gonza\\Desktop\\Tomas-portfolio\\src\\app\\work"
     ]
   }
 }

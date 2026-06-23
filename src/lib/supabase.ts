@@ -7,6 +7,35 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // ── Tipos ──────────────────────────────────────────────────────────────────
 
+// NOTE: Run this SQL in Supabase SQL Editor before using case study features:
+// ALTER TABLE projects ADD COLUMN IF NOT EXISTS case_study_data jsonb;
+
+export interface CaseStudyData {
+  subtitle?: string;
+  client?: string;
+  industry?: string;
+  services?: string[];
+  timeline?: string;
+  role?: string;
+  type?: "paid_social" | "branding" | "website" | "email" | "creative_direction" | "tiktok" | "launch" | "social_system";
+  challenge?: string;
+  strategy?: {
+    research?: string;
+    creative_direction?: string;
+    system_design?: string;
+    optimization?: string;
+  };
+  results?: Array<{ value: string; label: string; context?: string }>;
+  testimonial?: { quote: string; name: string; position: string; company: string };
+  gallery?: string[];
+  process_images?: string[];
+  deep_dive?: {
+    creative_decisions?: string;
+    performance_insights?: string;
+    system_thinking?: string;
+  };
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -17,6 +46,7 @@ export interface Project {
   case_study_url: string | null;
   sort_order: number;
   created_at: string;
+  case_study_data?: CaseStudyData | null;
 }
 
 export type ProjectInput = Omit<Project, "id" | "created_at">;
@@ -49,6 +79,16 @@ export async function getProjects(): Promise<Project[]> {
     return [];
   }
   return data ?? [];
+}
+
+export async function getProjectByIdOrSlug(id: string): Promise<Project | null> {
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  if (error || !data) return null;
+  return data;
 }
 
 // ── Proyectos (escritura) ──────────────────────────────────────────────────
