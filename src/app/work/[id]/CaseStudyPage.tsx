@@ -360,41 +360,21 @@ export default function CaseStudyPage({ project, prevProject, nextProject }: Pro
             <h2 className="fade-up text-5xl tracking-[-0.02em] leading-[1] mb-12">
               The final system.
             </h2>
-            <div className="space-y-6">
-              {/* First image — edge to edge */}
-              {cs!.gallery!.slice(0, 1).map((src) => (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {cs!.gallery!.map((src) => (
                 <div
                   key={src}
-                  className="fade-up relative aspect-video rounded-[1.5rem] overflow-hidden border border-white/10"
+                  className="fade-up relative aspect-[4/3] rounded-[1.5rem] overflow-hidden border border-white/10"
                 >
                   <Image
                     src={src}
                     alt="Gallery image"
                     fill
                     className="object-cover hover:scale-[1.02] transition-transform duration-700"
-                    sizes="100vw"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
                 </div>
               ))}
-              {/* Rest — grid */}
-              {cs!.gallery!.length > 1 && (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {cs!.gallery!.slice(1).map((src) => (
-                    <div
-                      key={src}
-                      className="fade-up relative aspect-[4/3] rounded-[1.5rem] overflow-hidden border border-white/10"
-                    >
-                      <Image
-                        src={src}
-                        alt="Gallery image"
-                        fill
-                        className="object-cover hover:scale-[1.02] transition-transform duration-700"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
         </section>
