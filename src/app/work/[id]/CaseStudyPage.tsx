@@ -229,10 +229,10 @@ export default function CaseStudyPage({ project, prevProject, nextProject }: Pro
                   <Image
                     src={src}
                     alt={`Process ${i + 1}`}
-                    width={1400}
-                    height={900}
-                    className="w-full h-auto"
+                    width={0}
+                    height={0}
                     sizes="100vw"
+                    style={{ width: "100%", height: "auto" }}
                   />
                 </div>
               ))}
