@@ -186,9 +186,7 @@ export default function CaseStudyTab() {
     if (!selectedId) return;
     setSaving(true);
     setError("");
-    const { error: err } = await updateProject(selectedId, {
-      case_study_data: null,
-    } as Parameters<typeof updateProject>[1]);
+    const { error: err } = await updateProject(selectedId, { case_study_data: null });
     if (err) {
       setError(`Error al borrar: ${err}`);
     } else {
@@ -205,9 +203,7 @@ export default function CaseStudyTab() {
     setSaved(false);
     setError("");
     const caseStudyData = formToData(form);
-    const { error: err } = await updateProject(selectedId, {
-      case_study_data: caseStudyData,
-    } as Parameters<typeof updateProject>[1]);
+    const { error: err } = await updateProject(selectedId, { case_study_data: caseStudyData });
     if (err) {
       setError(`Error al guardar: ${err}`);
     } else {

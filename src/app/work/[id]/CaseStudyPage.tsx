@@ -223,7 +223,7 @@ export default function CaseStudyPage({ project, prevProject, nextProject }: Pro
             <div className="grid md:grid-cols-2 gap-6">
               {cs!.process_images!.map((src, i) => (
                 <div
-                  key={i}
+                  key={src}
                   className={`fade-up relative overflow-hidden rounded-[1.5rem] border border-white/10 ${
                     i === 0 ? "md:col-span-2 aspect-video" : "aspect-[4/3]"
                   }`}
@@ -261,8 +261,8 @@ export default function CaseStudyPage({ project, prevProject, nextProject }: Pro
                     : "md:grid-cols-2 lg:grid-cols-4"
                 }`}
               >
-                {cs.results.map((r, i) => (
-                  <div key={i} className="fade-up text-center">
+                {cs.results.map((r) => (
+                  <div key={r.value + r.label} className="fade-up text-center">
                     <div
                       className="font-medium tracking-[-0.03em] leading-none"
                       style={{ fontSize: "clamp(48px, 8vw, 96px)" }}
@@ -362,14 +362,14 @@ export default function CaseStudyPage({ project, prevProject, nextProject }: Pro
             </h2>
             <div className="space-y-6">
               {/* First image — edge to edge */}
-              {cs!.gallery!.slice(0, 1).map((src, i) => (
+              {cs!.gallery!.slice(0, 1).map((src) => (
                 <div
-                  key={i}
+                  key={src}
                   className="fade-up relative aspect-video rounded-[1.5rem] overflow-hidden border border-white/10"
                 >
                   <Image
                     src={src}
-                    alt={`Gallery ${i + 1}`}
+                    alt="Gallery image"
                     fill
                     className="object-cover hover:scale-[1.02] transition-transform duration-700"
                     sizes="100vw"
@@ -379,14 +379,14 @@ export default function CaseStudyPage({ project, prevProject, nextProject }: Pro
               {/* Rest — grid */}
               {cs!.gallery!.length > 1 && (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {cs!.gallery!.slice(1).map((src, i) => (
+                  {cs!.gallery!.slice(1).map((src) => (
                     <div
-                      key={i}
+                      key={src}
                       className="fade-up relative aspect-[4/3] rounded-[1.5rem] overflow-hidden border border-white/10"
                     >
                       <Image
                         src={src}
-                        alt={`Gallery ${i + 2}`}
+                        alt="Gallery image"
                         fill
                         className="object-cover hover:scale-[1.02] transition-transform duration-700"
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
