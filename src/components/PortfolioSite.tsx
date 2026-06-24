@@ -437,14 +437,14 @@ export default function PortfolioSite() {
                         href={project.case_study_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block border border-white/10 rounded-full px-6 py-3 text-sm hover:bg-white/5 transition-colors"
+                        className="inline-block bg-white text-black rounded-full px-6 py-3 text-sm font-medium hover:bg-white/90 transition-colors"
                       >
                         View Case Study
                       </a>
                     ) : project.case_study_data && Object.keys(project.case_study_data).length > 0 ? (
                       <a
                         href={`/work/${project.id}`}
-                        className="inline-block border border-white/10 rounded-full px-6 py-3 text-sm hover:bg-white/5 transition-colors"
+                        className="inline-block bg-white text-black rounded-full px-6 py-3 text-sm font-medium hover:bg-white/90 transition-colors"
                       >
                         View Case Study
                       </a>
