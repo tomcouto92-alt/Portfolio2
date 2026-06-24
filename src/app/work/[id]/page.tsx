@@ -2,10 +2,7 @@ import { notFound } from "next/navigation";
 import { getProjects, getProjectByIdOrSlug } from "@/lib/supabase";
 import CaseStudyPage from "./CaseStudyPage";
 
-export async function generateStaticParams() {
-  const projects = await getProjects();
-  return projects.map((p) => ({ id: p.id }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function WorkPage({ params }: { params: { id: string } }) {
   const [project, allProjects] = await Promise.all([
