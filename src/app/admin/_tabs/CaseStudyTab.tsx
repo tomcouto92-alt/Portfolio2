@@ -182,6 +182,23 @@ export default function CaseStudyTab() {
     if (p) setForm(projectToForm(p));
   }
 
+  async function handleClear() {
+    if (!selectedId) return;
+    setSaving(true);
+    setError("");
+    const { error: err } = await updateProject(selectedId, {
+      case_study_data: null,
+    } as Parameters<typeof updateProject>[1]);
+    if (err) {
+      setError(`Error al borrar: ${err}`);
+    } else {
+      setForm(EMPTY_FORM);
+      const updated = await getProjects();
+      setProjects(updated);
+    }
+    setSaving(false);
+  }
+
   async function handleSave() {
     if (!selectedId) return;
     setSaving(true);
@@ -440,14 +457,21 @@ export default function CaseStudyTab() {
             </p>
           )}
 
-          {/* Save button */}
-          <div className="pt-4">
+          {/* Buttons */}
+          <div className="pt-4 flex flex-wrap gap-3 items-center">
             <SaveButton
               onClick={handleSave}
               saving={saving}
               saved={saved}
               label="Guardar case study"
             />
+            <button
+              onClick={handleClear}
+              disabled={saving}
+              className="px-6 py-3.5 border border-red-400/20 text-red-400 rounded-full text-sm hover:bg-red-400/10 transition-colors disabled:opacity-40"
+            >
+              Borrar case study
+            </button>
           </div>
         </div>
       )}
