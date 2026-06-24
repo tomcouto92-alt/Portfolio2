@@ -220,20 +220,19 @@ export default function CaseStudyPage({ project, prevProject, nextProject }: Pro
             <h2 className="fade-up text-4xl tracking-[-0.02em] mb-12">
               The creative process.
             </h2>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-6">
               {cs!.process_images!.map((src, i) => (
                 <div
                   key={src}
-                  className={`fade-up relative overflow-hidden rounded-[1.5rem] border border-white/10 ${
-                    i === 0 ? "md:col-span-2 aspect-video" : "aspect-[4/3]"
-                  }`}
+                  className="fade-up overflow-hidden rounded-[1.5rem] border border-white/10"
                 >
                   <Image
                     src={src}
                     alt={`Process ${i + 1}`}
-                    fill
-                    className="object-cover hover:scale-[1.02] transition-transform duration-700"
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    width={1400}
+                    height={900}
+                    className="w-full h-auto"
+                    sizes="100vw"
                   />
                 </div>
               ))}
